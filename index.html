@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>iwsydt.company - домен продаётся</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'%3E%3Ccircle cx='17' cy='17' r='16' fill='%23f7931e' stroke='%23fff' stroke-width='2'/%3E%3Cg fill='none' stroke='%23fff' stroke-width='1.6'%3E%3Ccircle cx='17' cy='17' r='9'/%3E%3Cellipse cx='17' cy='17' rx='4' ry='9'/%3E%3Cpath d='M8 17h18'/%3E%3C/g%3E%3C/svg%3E">
 <style>
   * { box-sizing: border-box; }
   html, body { margin: 0; min-height: 100%; }
@@ -27,24 +28,7 @@
   .box textarea { height: 78px; resize: vertical; }
   .box input:focus, .box textarea:focus { outline: none; border-color: #2e8bd6; }
 
-  .captcha { position: relative; margin: 10px 0 12px; }
-  .cap-row { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 300px; height: 62px; padding: 0 12px; background: #fafafa; border: 1px solid #d3d3d3; border-radius: 2px; box-shadow: 0 0 2px rgba(0,0,0,.08); cursor: pointer; user-select: none; }
-  .cap-l { display: flex; align-items: center; font-size: 13px; color: #222; }
-  .cap-cb { width: 24px; height: 24px; margin-right: 12px; background: #fff; border: 2px solid #c1c1c1; border-radius: 2px; position: relative; }
-  .cap-row:hover .cap-cb { border-color: #b2b2b2; }
-  .cap-cb.ok { border-color: #fff; }
-  .cap-cb.ok:after { content: ""; position: absolute; left: 6px; top: -1px; width: 8px; height: 17px; border: solid #0aa755; border-width: 0 4px 4px 0; transform: rotate(40deg); }
-  .cap-r { text-align: center; font-size: 8px; color: #777; line-height: 1.2; }
-  .cap-r svg { width: 26px; height: 26px; display: block; margin: 0 auto 1px; }
-  .cap-pop { display: none; position: absolute; z-index: 5; left: 0; top: 68px; width: 250px; padding: 10px; background: #fff; border: 1px solid #bbb; box-shadow: 0 2px 8px rgba(0,0,0,.3); }
-  .cap-pop.open { display: block; }
-  .cap-pop canvas { display: block; width: 100%; height: 60px; border: 1px solid #ddd; margin-bottom: 8px; background: #f4f4f4; }
-  .cap-pop input { margin-bottom: 8px !important; text-transform: uppercase; letter-spacing: 2px; }
-  .cap-btns { display: flex; justify-content: space-between; align-items: center; }
-  .cap-btns a { cursor: pointer; font-size: 11px; color: #1a6fb5; }
-  .cap-btns button { padding: 5px 14px; background: #2e8bd6; border: 1px solid #1a6fb5; border-radius: 2px; color: #fff; font: bold 12px Arial, sans-serif; cursor: pointer; }
-  .cap-btns button:hover { background: #1a6fb5; }
-  .cap-hint { font-size: 11px; color: #777; margin-bottom: 6px; }
+  .captcha { margin: 10px 0 12px; min-height: 78px; overflow: hidden; }
 
   .send { display: block; width: 100%; padding: 10px; background: #0aa755; border: 1px solid #08914a; border-radius: 2px; color: #fff; font: bold 13px Roboto, Arial, sans-serif; cursor: pointer; }
   .send:hover { background: #08914a; }
@@ -86,18 +70,7 @@
     <input type="email" name="email" id="email" placeholder="Ваша электронная почта" maxlength="120">
     <textarea name="message" id="msg" placeholder="Сообщение" maxlength="2000"></textarea>
 
-    <div class="captcha">
-      <div class="cap-row" id="caprow">
-        <div class="cap-l"><span class="cap-cb" id="capcb"></span>Я не робот</div>
-        <div class="cap-r"><svg viewBox="0 0 26 26"><path d="M13 3a10 10 0 0 1 8.7 5l-3.2 1.2A6.5 6.5 0 0 0 13 6.5z" fill="#4a90e2"/><path d="M21.7 8A10 10 0 0 1 18 21.5l-1.2-3.2A6.5 6.5 0 0 0 18.5 9.2z" fill="#1c3aa9"/><path d="M18 21.5A10 10 0 0 1 4.3 18l3.2-1.2a6.5 6.5 0 0 0 9.3 1.5z" fill="#4a90e2"/></svg>защита<br>от роботов</div>
-      </div>
-      <div class="cap-pop" id="cappop">
-        <canvas id="cv" width="450" height="120"></canvas>
-        <div class="cap-hint">Введите символы с картинки</div>
-        <input type="text" id="capin" autocomplete="off" maxlength="6">
-        <div class="cap-btns"><a id="caprf">Другая картинка</a><button type="button" id="capok">Проверить</button></div>
-      </div>
-    </div>
+    <div class="captcha"><div class="g-recaptcha" data-sitekey="6LeTiQ4uAAAAAJK70aPH04y4-jIRCQhVrBfblObB"></div></div>
 
     <button class="send" type="submit">Отправить</button>
   </form>
@@ -110,60 +83,16 @@
   </div>
 </div>
 
+<script src="https://www.google.com/recaptcha/api.js?hl=ru" async defer></script>
 <script>
-  // Проверка формы и капчи только на клиенте; сама отправка идёт на gadichdmn.gd (сервис закрыт).
-  var ALPHA = 'ABCDEFGHJKLMNPRSTUVWXYZ23456789', code = '', passed = false;
+  // Проверка формы только на клиенте; сама отправка идёт на gadichdmn.gd (сервис закрыт).
   var $ = function (id) { return document.getElementById(id); };
-
-  function draw() {
-    var c = $('cv'), g = c.getContext('2d'), i, w = c.width, h = c.height;
-    code = '';
-    for (i = 0; i < 5; i++) code += ALPHA.charAt(Math.floor(Math.random() * ALPHA.length));
-    g.fillStyle = '#f4f4f4'; g.fillRect(0, 0, w, h);
-    for (i = 0; i < 9; i++) {
-      g.strokeStyle = 'hsl(' + Math.random() * 360 + ',45%,60%)'; g.lineWidth = 1 + Math.random() * 2;
-      g.beginPath(); g.moveTo(Math.random() * w, Math.random() * h);
-      g.bezierCurveTo(Math.random() * w, Math.random() * h, Math.random() * w, Math.random() * h, Math.random() * w, Math.random() * h);
-      g.stroke();
-    }
-    for (i = 0; i < code.length; i++) {
-      g.save();
-      g.translate(40 + i * 82, h / 2 + (Math.random() - .5) * 18);
-      g.rotate((Math.random() - .5) * .8);
-      g.font = 'bold ' + (56 + Math.random() * 14) + 'px Arial, sans-serif';
-      g.textAlign = 'center'; g.textBaseline = 'middle';
-      g.fillStyle = 'hsl(' + (200 + Math.random() * 60) + ',55%,' + (22 + Math.random() * 14) + '%)';
-      g.fillText(code.charAt(i), 0, 0);
-      g.restore();
-    }
-    for (i = 0; i < 160; i++) {
-      g.fillStyle = 'rgba(' + [0, 0, 0].map(function () { return Math.floor(Math.random() * 200); }).join(',') + ',.35)';
-      g.fillRect(Math.random() * w, Math.random() * h, 2, 2);
-    }
-    $('capin').value = '';
-  }
-
-  function closePop() { $('cappop').className = 'cap-pop'; }
-  $('caprow').onclick = function () {
-    if (passed) return;
-    var p = $('cappop');
-    if (p.className.indexOf('open') < 0) { draw(); p.className = 'cap-pop open'; $('capin').focus(); } else closePop();
-  };
-  $('caprf').onclick = draw;
-  function check() {
-    if ($('capin').value.toUpperCase() === code) {
-      passed = true; $('capcb').className = 'cap-cb ok'; closePop();
-    } else { draw(); $('capin').placeholder = 'Неверно, попробуйте снова'; $('capin').focus(); }
-  }
-  $('capok').onclick = check;
-  $('capin').onkeydown = function (e) { if (e.keyCode === 13) { e.preventDefault(); check(); } };
-
   $('f').onsubmit = function (e) {
-    var msg = '';
+    var msg = '', ok = window.grecaptcha && grecaptcha.getResponse();
     if (!$('name').value.replace(/\s/g, '')) msg = 'Укажите ваше имя.';
     else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test($('email').value)) msg = 'Укажите корректный адрес электронной почты.';
     else if (!$('msg').value.replace(/\s/g, '')) msg = 'Введите сообщение.';
-    else if (!passed) msg = 'Подтвердите, что вы не робот.';
+    else if (!ok) msg = 'Подтвердите, что вы не робот.';
     if (msg) { e.preventDefault(); $('err').textContent = msg; $('err').style.display = 'block'; return false; }
   };
 </script>
